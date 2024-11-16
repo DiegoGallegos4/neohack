@@ -55,7 +55,7 @@ export function StakingForm() {
                       type="number"
                       placeholder="0.00"
                       {...field}
-                      className="h-full w-full border-transparent outline-transparent ring-transparent shadow-none font-bold "
+                      className="h-full w-full border-transparent outline-transparent ring-transparent shadow-none font-semibold text-xl "
                     />
                   </div>
                   <div className="h-[30%] flex px-3 gap-2">
