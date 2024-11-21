@@ -56,6 +56,12 @@ const config: HardhatUserConfig = {
             eid: EndpointId.SEPOLIA_V2_TESTNET,
             url: process.env.RPC_URL_SEPOLIA || 'https://rpc.sepolia.org/',
             accounts,
+            verify: {
+                etherscan: {
+                    apiUrl: 'https://api-sepolia.etherscan.io',
+                    apiKey: process.env.ETHERSCAN_API_KEY,
+                },
+            },
         },
         'arbsep-testnet': {
             eid: EndpointId.ARBSEP_V2_TESTNET,

@@ -2,7 +2,9 @@
 pragma solidity ^0.8.22;
 
 import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import { OFTAdapter } from "@layerzerolabs/oft-evm/contracts/OFTAdapter.sol";
+
 
 /// @notice ERC4626 vault wrapper
 contract StakingVault is OFTAdapter {
@@ -33,10 +35,14 @@ contract StakingVault is OFTAdapter {
     ) OFTAdapter(_token, _lzEndpoint, _delegate) Ownable(_delegate) {}
 
     /// @notice Approve the sUSDe contract to spend USDe on behalf of the user
-    /// @param user Approving user
-    /// @param amount Amount to be approved for sUSDe to stake USDe
-    function approveStaking(address user, uint256 amount) external{
-        emit Approve(user, amount);
+    /// @param _amount Amount to be approved for sUSDe to stake USDe
+    function receiveAndApprove(uint256 _amount) internal {
+        // transfer token from user to smart contract
+        ERC20(USDeContract).transferFrom(msg.sender, address(this), _amount);
+        // approve SUSDe contract to transfer the required amount of tokens
+        ERC20(USDeContract).approve(SUSDeContract, _amount);
+        
+        emit Approve(msg.sender, _amount);
     }
 
     /// @notice Stake USDe by calling deposit from Ethena
@@ -46,6 +52,9 @@ contract StakingVault is OFTAdapter {
 
         totalStakedAmount += amount;
         userStake[msg.sender] += amount;
+        //receive tokens from user and approve SUSDeContract
+        receiveAndApprove(amount);
+
         // calls burn/lock, which burns token fromt the specified user's wallet
         // calls safeTransferFrom for token
         _debit(
