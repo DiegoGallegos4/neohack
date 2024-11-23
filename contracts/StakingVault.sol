@@ -5,7 +5,6 @@ import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import { OFTAdapter } from "@layerzerolabs/oft-evm/contracts/OFTAdapter.sol";
 
-
 /// @notice ERC4626 vault wrapper
 contract StakingVault is OFTAdapter {
     // -- Constants --- 
