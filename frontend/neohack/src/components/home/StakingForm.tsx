@@ -38,7 +38,7 @@ const formSchema = z.object({
 });
 
 const contract = getContract({
-  address: process.env.NEXT_PUBLIC_STAKING_VAULT as string,
+  address: process.env.NEXT_PUBLIC_SUSDE as string,
   chain: sepolia,
   client,
 });
@@ -50,11 +50,15 @@ const tokenContract = getContract({
 });
 
 export function StakingForm() {
+  const [isLoading, setIsLoading] = useState(true);
+  const activeAccount = useActiveAccount();
+
   const {
     mutate: sendAndConfirmTx,
     data: transactionReceipt,
     error,
     isSuccess,
+    isPending,
   } = useSendAndConfirmTransaction();
   const {
     mutate: sendAndConfirmStakeTx,
@@ -62,7 +66,6 @@ export function StakingForm() {
     error: stakeError,
   } = useSendAndConfirmTransaction();
 
-  console.log(stakeError, stakeSuccess);
   const [amount, setAmount] = useState("");
 
   // define form
@@ -75,12 +78,13 @@ export function StakingForm() {
 
   //  Define a submit handler.
   function onSubmit(values: z.infer<typeof formSchema>) {
+    setIsLoading(true);
     const weiAmount = ethers.utils.parseUnits(String(values.amount), "ether");
 
     setAmount(weiAmount.toString());
 
     //approval
-    const spender = process.env.NEXT_PUBLIC_STAKING_VAULT as string;
+    const spender = process.env.NEXT_PUBLIC_SUSDE as string;
     const approvalTransaction = prepareContractCall({
       contract: tokenContract,
       method: "function approve(address spender, uint256 amount)",
@@ -91,10 +95,11 @@ export function StakingForm() {
 
   function stake() {
     console.log("ok");
+    if (!activeAccount?.address) return;
     const transaction = prepareContractCall({
       contract,
-      method: "function stake(uint256 amount)",
-      params: [BigInt(amount)],
+      method: "deposit(uint256, address)",
+      params: [BigInt(amount), activeAccount?.address],
     });
     sendAndConfirmStakeTx(transaction);
   }
@@ -129,7 +134,7 @@ export function StakingForm() {
                   </div>
                   <div className="h-[30%] flex px-3 gap-2">
                     <span className="text-gray-500 font-semibold text-xs">
-                      Balance:
+                      Matching SUSDe:
                     </span>
                     <span className="text-gray-600 text-xs font-bold">
                       00.0
@@ -142,8 +147,18 @@ export function StakingForm() {
             </FormItem>
           )}
         />
-        <Button type="submit" className="w-full h-12">
-          Stake
+        <Button
+          type="submit"
+          disabled={isLoading || isPending}
+          className="w-full h-12"
+        >
+          {isLoading || isPending ? (
+            <>
+              <span className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-3"></span>
+            </>
+          ) : (
+            "Submit"
+          )}
         </Button>
       </form>
     </Form>
