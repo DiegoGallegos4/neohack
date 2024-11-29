@@ -1,9 +1,46 @@
 "use client";
+import { ethers } from "ethers";
+import { useEffect } from "react";
+import { getContract, prepareContractCall } from "thirdweb";
+import { sepolia } from "thirdweb/chains";
+import {
+  useActiveAccount,
+  useReadContract,
+  useSendAndConfirmTransaction,
+} from "thirdweb/react";
+
+import { client } from "../../app/client";
 
 import { StakingForm } from "./StakingForm";
 import { UnStakingForm } from "./UnstakeForm";
 
+const contract = getContract({
+  address: process.env.NEXT_PUBLIC_SUSDE as string,
+  chain: sepolia,
+  client,
+});
+
+const tokenContract = getContract({
+  address: process.env.NEXT_PUBLIC_USDE as string,
+  chain: sepolia,
+  client,
+});
+
 export default function Staking() {
+  const activeAccount = useActiveAccount();
+
+  const { data: susdeBalance } = useReadContract({
+    contract,
+    method: "function balanceOf(address) returns (uint256)",
+    params: [activeAccount?.address],
+  });
+
+  const { data: usdeBalance } = useReadContract({
+    contract: tokenContract,
+    method: "function balanceOf(address) returns (uint256)",
+    params: [activeAccount?.address],
+  });
+
   return (
     <div className="w-full px-4 h-full flex justify-center items-center  flex-col py-10 ">
       <div className="h-full  w-full max-w-[700px] shadow border rounded-xl px-5 py-5  flex flex-col gap-2">
@@ -32,12 +69,25 @@ export default function Staking() {
               <span className="text-primary text-sm font-bold">1 hr</span>
             </div>
             <div className="flex gap-2 justify-between w-full">
-              <span className="text-gray-500 font-semibold text-sm">USDe</span>
-              <span className="text-primary text-sm font-bold">100.0</span>
+              <span className="text-gray-500 font-semibold text-sm">
+                USDe balance
+              </span>
+              <span className="text-primary text-sm font-bold">
+                {" "}
+                {usdeBalance
+                  ? Number(ethers.utils.formatEther(usdeBalance)).toFixed(2)
+                  : 0}
+              </span>
             </div>
             <div className="flex gap-2 justify-between w-full">
-              <span className="text-gray-500 font-semibold text-sm">sUSDe</span>
-              <span className="text-primary text-sm font-bold">100.0</span>
+              <span className="text-gray-500 font-semibold text-sm">
+                S USDe balance
+              </span>
+              <span className="text-primary text-sm font-bold">
+                {susdeBalance
+                  ? Number(ethers.utils.formatEther(susdeBalance)).toFixed(2)
+                  : 0}
+              </span>
             </div>
           </div>
         </div>

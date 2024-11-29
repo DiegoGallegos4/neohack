@@ -1,14 +1,17 @@
 "use client";
+
+import { zodResolver } from "@hookform/resolvers/zod";
 import { ethers } from "ethers";
-
-import abi from "@/abis/StakingVault.json";
-import { useActiveAccount, useSendBatchTransaction } from "thirdweb/react";
-import { approve, transferFrom } from "thirdweb/extensions/erc20";
-
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 import { getContract, prepareContractCall } from "thirdweb";
 import { sepolia } from "thirdweb/chains";
-import { useSendTransaction } from "thirdweb/react";
-import { useSendAndConfirmTransaction } from "thirdweb/react";
+import {
+  useActiveAccount,
+  useReadContract,
+  useSendAndConfirmTransaction,
+} from "thirdweb/react";
+import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -21,12 +24,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
 
 import { client } from "../../app/client";
-import { useEffect, useState } from "react";
 
 const formSchema = z.object({
   amount: z
@@ -38,7 +37,7 @@ const formSchema = z.object({
 });
 
 const contract = getContract({
-  address: process.env.NEXT_PUBLIC_STAKING_VAULT as string,
+  address: process.env.NEXT_PUBLIC_SUSDE as string,
   chain: sepolia,
   client,
 });
@@ -50,11 +49,14 @@ const tokenContract = getContract({
 });
 
 export function UnStakingForm() {
+  const [isLoading, setIsLoading] = useState(false);
+  const activeAccount = useActiveAccount();
+
   const {
     mutate: sendAndConfirmTx,
-    data: transactionReceipt,
     error,
     isSuccess,
+    isPending,
   } = useSendAndConfirmTransaction();
   const {
     mutate: sendAndConfirmStakeTx,
@@ -62,25 +64,36 @@ export function UnStakingForm() {
     error: stakeError,
   } = useSendAndConfirmTransaction();
 
-  console.log(stakeError, stakeSuccess);
   const [amount, setAmount] = useState("");
 
   // define form
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      amount: undefined,
+      amount: 0,
     },
+  });
+
+  function toWeiAmount(amt: number) {
+    return ethers.utils.parseUnits(String(amt), "ether").toString();
+  }
+
+  const amt = form.watch("amount", "");
+  const { data: usdeRatio } = useReadContract({
+    contract,
+    method: "function convertToAssets(uint256) returns(uint256)",
+    params: [BigInt(toWeiAmount(Number(amt)))],
   });
 
   //  Define a submit handler.
   function onSubmit(values: z.infer<typeof formSchema>) {
-    const weiAmount = ethers.utils.parseUnits(String(values.amount), "ether");
+    setIsLoading(true);
+    const weiAmount = toWeiAmount(values.amount);
 
-    setAmount(weiAmount.toString());
+    setAmount(weiAmount);
 
     //approval
-    const spender = process.env.NEXT_PUBLIC_STAKING_VAULT as string;
+    const spender = process.env.NEXT_PUBLIC_SUSDE as string;
     const approvalTransaction = prepareContractCall({
       contract: tokenContract,
       method: "function approve(address spender, uint256 amount)",
@@ -90,11 +103,11 @@ export function UnStakingForm() {
   }
 
   function stake() {
-    console.log("ok");
+    if (!activeAccount?.address) return;
     const transaction = prepareContractCall({
       contract,
-      method: "function stake(uint256 amount)",
-      params: [BigInt(amount)],
+      method: "function deposit(uint256, address)",
+      params: [BigInt(amount), activeAccount?.address],
     });
     sendAndConfirmStakeTx(transaction);
   }
@@ -103,7 +116,21 @@ export function UnStakingForm() {
     if (isSuccess) {
       stake();
     }
+    if (error) {
+      setIsLoading(false);
+    }
   }, [isSuccess]);
+
+  useEffect(() => {
+    if (stakeSuccess || stakeError) {
+      setIsLoading(false);
+      form.resetField("amount");
+    }
+  }, [stakeSuccess]);
+
+  useEffect(() => {
+    console.log(amt);
+  }, [amt]);
 
   return (
     <Form {...form}>
@@ -132,7 +159,9 @@ export function UnStakingForm() {
                       Matching USDe:
                     </span>
                     <span className="text-gray-600 text-xs font-bold">
-                      00.0
+                      {usdeRatio
+                        ? Number(ethers.utils.formatEther(usdeRatio)).toFixed(2)
+                        : 0}
                     </span>
                   </div>
                 </div>
@@ -142,8 +171,18 @@ export function UnStakingForm() {
             </FormItem>
           )}
         />
-        <Button type="submit" className="w-full h-12">
-          UnStake
+        <Button
+          type="submit"
+          disabled={isLoading || isPending}
+          className="w-full h-12"
+        >
+          {isLoading || isPending ? (
+            <>
+              <span className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-3"></span>
+            </>
+          ) : (
+            "Unstake"
+          )}
         </Button>
       </form>
     </Form>
