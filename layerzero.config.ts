@@ -7,8 +7,10 @@ const sepoliaContract: OmniPointHardhat = {
     contractName: 'StakingVault',
 }
 
+
 const arbitrumContract: OmniPointHardhat = {
     eid: EndpointId.ARBSEP_V2_TESTNET,
+
     contractName: 'StakingVault',
 }
 
