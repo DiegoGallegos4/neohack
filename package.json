@@ -22,6 +22,7 @@
     "hardhat-deploy": "^0.12.1"
   },
   "dependencies": {
+    "@tailwindcss/typography": "0.0.0-insiders.0339c42",
     "fs-extra": "^11.2.0"
   },
   "devDependencies": {
