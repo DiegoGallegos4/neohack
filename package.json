@@ -22,7 +22,7 @@
     "hardhat-deploy": "^0.12.1"
   },
   "dependencies": {
-    "@tailwindcss/typography": "0.0.0-insiders.0339c42",
+    "ethers": "^6.13.4",
     "fs-extra": "^11.2.0"
   },
   "devDependencies": {
@@ -53,7 +53,6 @@
     "dotenv": "^16.4.1",
     "eslint": "^8.55.0",
     "eslint-plugin-jest-extended": "~2.0.0",
-    "ethers": "^5.7.2",
     "hardhat": "^2.22.10",
     "hardhat-contract-sizer": "^2.10.0",
     "hardhat-deploy": "^0.12.1",

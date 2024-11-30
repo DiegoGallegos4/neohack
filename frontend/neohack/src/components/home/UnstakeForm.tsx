@@ -1,9 +1,10 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ethers } from "ethers";
+import { formatEther, parseEther } from "ethers";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { useTimer } from "react-timer-hook";
 import { getContract, prepareContractCall } from "thirdweb";
 import { sepolia } from "thirdweb/chains";
 import {
@@ -22,6 +23,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { useToast } from "@/hooks/use-toast";
 
 import { client } from "../../app/client";
 
@@ -46,23 +48,56 @@ const tokenContract = getContract({
   client,
 });
 
-export function UnStakingForm() {
+interface CountdownTimerProps {
+  endTime: Date;
+  onComplete: () => void;
+}
+
+const CountdownTimer: React.FC<CountdownTimerProps> = ({
+  endTime,
+  onComplete,
+}) => {
+  const { seconds, minutes, hours, isRunning } = useTimer({
+    expiryTimestamp: endTime,
+    onExpire: onComplete,
+  });
+
+  return (
+    <>
+      <p>{`${minutes}m ${seconds}s`}</p>
+      {!isRunning && <p>0s</p>}
+    </>
+  );
+};
+
+// component starts
+export function UnStakingForm({
+  refetchSusde,
+  refetchUsde,
+}: {
+  refetchSusde: () => void;
+  refetchUsde: () => void;
+}) {
   const [isLoading, setIsLoading] = useState(false);
+  const [coolingLoading, setCoolingLoading] = useState(false);
   const activeAccount = useActiveAccount();
+  const [endTime, setEndTime] = useState<Date | null>(null);
+  const [oldValue, setOldValue] = useState<number>(0);
+  const { toast } = useToast();
 
   const {
-    mutate: sendAndConfirmTx,
-    error,
-    isSuccess,
-    isPending,
-  } = useSendAndConfirmTransaction();
-  const {
-    mutate: sendAndConfirmStakeTx,
-    isSuccess: stakeSuccess,
-    error: stakeError,
+    mutate: sendAndConfirmUnStakeTx,
+    isSuccess: unStakeSuccess,
+    error: unStakeError,
+    isPending: unStakePending,
   } = useSendAndConfirmTransaction();
 
-  const [amount, setAmount] = useState("");
+  const {
+    mutate: sendAndConfirmCoolingTx,
+    isSuccess: coolingSuccess,
+    error: coolingError,
+    isPending: coolingPending,
+  } = useSendAndConfirmTransaction();
 
   // define form
   const form = useForm<z.infer<typeof formSchema>>({
@@ -73,69 +108,101 @@ export function UnStakingForm() {
   });
 
   function toWeiAmount(amt: number) {
-    return ethers.parseUnits(String(amt), "ether").toString();
+    return parseEther(String(amt)).toString();
   }
 
   const amt = form.watch("amount");
   const { data: usdeRatio } = useReadContract({
     contract,
-    method: "function convertToAssets(uint256) returns(uint256)", 
+    method: "function convertToAssets(uint256) returns(uint256)",
     params: [BigInt(toWeiAmount(Number(amt) || 0))],
   });
 
   //  Define a submit handler.
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  function startUnstake() {
     setIsLoading(true);
-    const weiAmount = toWeiAmount(values.amount);
 
-    setAmount(weiAmount);
-
-    //approval
-    const spender = process.env.NEXT_PUBLIC_SUSDE as string;
-    const approvalTransaction = prepareContractCall({
-      contract: tokenContract,
-      method: "function approve(address spender, uint256 amount)",
-      params: [spender, BigInt(weiAmount.toString())],
-    });
-    sendAndConfirmTx(approvalTransaction);
-  }
-
-  function stake() {
     if (!activeAccount?.address) return;
     const transaction = prepareContractCall({
       contract,
-      method: "function deposit(uint256, address)",
-      params: [BigInt(amount), activeAccount?.address],
+      method: "function unstake(address)",
+      params: [activeAccount?.address],
     });
-    sendAndConfirmStakeTx(transaction);
+    sendAndConfirmUnStakeTx(transaction);
+  }
+
+  function startCountdown() {
+    const newEndTime = new Date(Date.now() + 60 * 60 * 1000); // 1 hour from now
+    localStorage.setItem("endTime", newEndTime.toISOString());
+    setEndTime(newEndTime);
+  }
+
+  function handleCompletion() {
+    toast({
+      title: "Cooldown status ",
+      description: " Token cool-down time completed.",
+    });
+    localStorage.removeItem("endTime");
+    setEndTime(null);
+  }
+
+  function countdownRunning(): boolean {
+    if (!endTime) return false;
+    return new Date() < endTime;
+  }
+
+  function startCoolDownProcess() {
+    setCoolingLoading(true);
+    const amt = toWeiAmount(form.getValues("amount"));
+
+    const transaction = prepareContractCall({
+      contract,
+      method: "function cooldownShares(uint256)",
+      params: [BigInt(amt)],
+    });
+
+    sendAndConfirmCoolingTx(transaction);
   }
 
   useEffect(() => {
-    if (isSuccess) {
-      stake();
-    }
-    if (error) {
+    if (unStakeSuccess || unStakeError) {
       setIsLoading(false);
-    }
-  }, [isSuccess]);
-
-  useEffect(() => {
-    if (stakeSuccess || stakeError) {
-      setIsLoading(false);
+      //remove amount set to be cooled
+      localStorage.removeItem("coolAmount");
+      refetchUsde();
+      refetchSusde();
       form.resetField("amount");
     }
-  }, [stakeSuccess]);
+  }, [unStakeSuccess]);
 
   useEffect(() => {
-    console.log(amt);
-  }, [amt]);
+    if (coolingSuccess) {
+      startCountdown();
+      //save amount being cooled
+      localStorage.setItem(
+        "coolAmount",
+        (oldValue + form.getValues("amount")).toString(),
+      );
+      form.resetField("amount");
+      setCoolingLoading(false);
+    }
+    if (coolingError) {
+      setCoolingLoading(false);
+    }
+  }, [coolingSuccess, coolingError]);
+
+  useEffect(() => {
+    const savedEndTime = localStorage.getItem("endTime");
+    const oldValue = Number(localStorage.getItem("coolAmount")) || 0;
+    setOldValue(oldValue);
+    if (savedEndTime) {
+      setEndTime(new Date(savedEndTime));
+    }
+  }, []);
 
   return (
     <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="space-y-8 h-full "
-      >
+      <form className="space-y-8 h-full ">
         <FormField
           control={form.control}
           name="amount"
@@ -152,15 +219,36 @@ export function UnStakingForm() {
                       className="h-full w-full border-transparent outline-transparent ring-transparent shadow-none font-semibold text-xl "
                     />
                   </div>
-                  <div className="h-[30%] flex px-3 gap-2">
-                    <span className="text-gray-500 font-semibold text-xs">
-                      Matching USDe:
-                    </span>
-                    <span className="text-gray-600 text-xs font-bold">
-                      {usdeRatio
-                        ? Number(ethers.formatEther(usdeRatio)).toFixed(2)
-                        : 0}
-                    </span>
+                  <div className="h-[30%] flex  justify-between">
+                    <div className="h-full flex px-3 gap-2">
+                      <span className="text-gray-500 font-semibold text-xs">
+                        USDe Ratio:
+                      </span>
+                      <span className="text-gray-600 text-xs font-bold">
+                        {usdeRatio
+                          ? Number(formatEther(usdeRatio)).toFixed(2)
+                          : 0}
+                      </span>
+                    </div>
+                    <div className="h-full flex px-3 gap-2">
+                      <span className="text-gray-500 font-semibold text-xs">
+                        Available :
+                      </span>
+                      <span className="text-gray-600 text-xs font-bold">
+                        {oldValue}
+                      </span>
+                    </div>
+
+                    {endTime && (
+                      <div className="h-full flex px-3 gap-2 whitespace-nowrap">
+                        <span className="text-gray-500 font-semibold text-xs ">
+                          <CountdownTimer
+                            endTime={endTime}
+                            onComplete={handleCompletion}
+                          />
+                        </span>
+                      </div>
+                    )}
                   </div>
                 </div>
               </FormControl>
@@ -169,19 +257,38 @@ export function UnStakingForm() {
             </FormItem>
           )}
         />
-        <Button
-          type="submit"
-          disabled={isLoading || isPending}
-          className="w-full h-12"
-        >
-          {isLoading || isPending ? (
-            <>
-              <span className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-3"></span>
-            </>
-          ) : (
-            "Unstake"
-          )}
-        </Button>
+
+        <div className="flex gap-2 h-12">
+          <Button
+            type="button"
+            onClick={startCoolDownProcess}
+            variant="default"
+            disabled={coolingLoading || coolingPending || countdownRunning()}
+            className="w-full h-full bg-secondary text-primary hover:text-white"
+          >
+            {coolingLoading || coolingPending ? (
+              <>
+                <span className="w-5 h-5 border-2 border-black border-t-transparent rounded-full animate-spin mr-3"></span>
+              </>
+            ) : (
+              "Cool down"
+            )}
+          </Button>
+          <Button
+            type="button"
+            onClick={startUnstake}
+            disabled={isLoading || unStakePending || oldValue == 0}
+            className="w-full h-full"
+          >
+            {isLoading || unStakePending ? (
+              <>
+                <span className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-3"></span>
+              </>
+            ) : (
+              <>{`Claim ${oldValue}`}</>
+            )}
+          </Button>
+        </div>
       </form>
     </Form>
   );

@@ -242,7 +242,7 @@ export default function Home() {
     <AppLayout>
       <div className="h-[94%] flex">
         <div className="w-full  bg-secondary h-full">
-          <div className="h-[30%]  flex flex-col gap-4 justify-center bg-slate-900 text-white px-4">
+          <div className="h-[30%]  flex flex-col gap-4 justify-center bg-slate-900 text-white px-4 items-center ">
             <h3 className="font-semibold text-xl">High Yield Savings</h3>
             <p className=" prose text-white">
               Stake your USDE tokens to earn rewards and support the protocol’s

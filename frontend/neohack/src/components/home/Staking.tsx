@@ -1,5 +1,5 @@
 "use client";
-import { ethers } from "ethers";
+import { ethers, formatEther } from "ethers";
 import { getContract } from "thirdweb";
 import { sepolia } from "thirdweb/chains";
 import { useActiveAccount, useReadContract } from "thirdweb/react";
@@ -24,13 +24,13 @@ const tokenContract = getContract({
 export default function Staking() {
   const activeAccount = useActiveAccount();
 
-  const { data: susdeBalance } = useReadContract({
+  const { data: susdeBalance, refetch: refetchSusde } = useReadContract({
     contract,
     method: "function balanceOf(address) returns (uint256)",
     params: [activeAccount?.address ?? ethers.ZeroAddress],
   });
 
-  const { data: usdeBalance } = useReadContract({
+  const { data: usdeBalance, refetch: refetchUsde } = useReadContract({
     contract: tokenContract,
     method: "function balanceOf(address) returns (uint256)",
     params: [activeAccount?.address ?? ethers.ZeroAddress],
@@ -38,7 +38,7 @@ export default function Staking() {
 
   return (
     <div className="w-full px-4 h-full flex justify-center items-center  flex-col py-10 ">
-      <div className="h-full  w-full max-w-[700px] shadow border rounded-xl px-5 py-5  flex flex-col gap-2">
+      <div className="h-full  w-full max-w-[700px] shadow border rounded-xl px-5 py-5  flex flex-col gap-2 ">
         <h3 className="h-[10%] flex items-center text-xl font-semibold">
           Stake to earn
         </h3>
@@ -46,12 +46,18 @@ export default function Staking() {
           <div className="grid  lg:grid-cols-2 gap-10 lg:h-[50%] ">
             <div className="col-span-1">
               <div className="h-full">
-                <StakingForm />
+                <StakingForm
+                  refetchSusde={refetchSusde}
+                  refetchUsde={refetchUsde}
+                />
               </div>
             </div>
             <div className="col-span-1 ">
               <div className="h-full ">
-                <UnStakingForm />
+                <UnStakingForm
+                  refetchSusde={refetchSusde}
+                  refetchUsde={refetchUsde}
+                />
               </div>
             </div>
           </div>
@@ -69,18 +75,16 @@ export default function Staking() {
               </span>
               <span className="text-primary text-sm font-bold">
                 {" "}
-                {usdeBalance
-                  ? Number(ethers.formatEther(usdeBalance)).toFixed(2)
-                  : 0}
+                {usdeBalance ? Number(formatEther(usdeBalance)).toFixed(2) : 0}
               </span>
             </div>
             <div className="flex gap-2 justify-between w-full">
               <span className="text-gray-500 font-semibold text-sm">
-                S USDe balance
+                SUSDe balance
               </span>
               <span className="text-primary text-sm font-bold">
                 {susdeBalance
-                  ? Number(ethers.formatEther(susdeBalance)).toFixed(2)
+                  ? Number(formatEther(susdeBalance)).toFixed(2)
                   : 0}
               </span>
             </div>
