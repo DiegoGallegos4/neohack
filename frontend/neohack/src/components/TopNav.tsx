@@ -15,6 +15,36 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
+const navigationItems = [
+  { href: "/savings", label: "Savings" },
+  { href: "/funding", label: "Lending" },
+  { href: "#", label: "Borrow", badge: "Soon" },
+  { href: "#", label: "Credit card", badge: "Soon" },
+];
+
+function NavLinkWithBadge({
+  href,
+  children,
+  badge,
+  LinkComponent,
+}: {
+  href: string;
+  children: React.ReactNode;
+  badge?: string;
+  LinkComponent: React.ElementType;
+}) {
+  return (
+    <div className="flex items-center relative">
+      <LinkComponent href={href}>{children}</LinkComponent>
+      {badge && (
+        <span className="absolute top-[10px] -ml-6 inline-flex items-center rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-800">
+          {badge}
+        </span>
+      )}
+    </div>
+  );
+}
+
 export function TopNav() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -29,9 +59,22 @@ export function TopNav() {
               </Link>
             </div>
             <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
-              <NavLink href="/savings">Savings</NavLink>
-              <NavLink href="/funding">Lending</NavLink>
-              <NavLink href="/borrow">Borrow</NavLink>
+              {navigationItems.map((item) =>
+                item.badge ? (
+                  <NavLinkWithBadge
+                    key={item.label}
+                    href={item.href}
+                    badge={item.badge}
+                    LinkComponent={NavLink}
+                  >
+                    {item.label}
+                  </NavLinkWithBadge>
+                ) : (
+                  <NavLink key={item.label} href={item.href}>
+                    {item.label}
+                  </NavLink>
+                ),
+              )}
             </div>
           </div>
           <div className="pt-2 pb-3 border-t border-gray-200"></div>
@@ -75,9 +118,22 @@ export function TopNav() {
       {isMobileMenuOpen && (
         <div className="sm:hidden">
           <div className="pt-2 pb-3 space-y-1">
-            <MobileNavLink href="/savings">Savings</MobileNavLink>
-            <MobileNavLink href="/funding">Lending</MobileNavLink>
-            <MobileNavLink href="/borrow">Borrow</MobileNavLink>
+            {navigationItems.map((item) =>
+              item.badge ? (
+                <NavLinkWithBadge
+                  key={item.label}
+                  href={item.href}
+                  badge={item.badge}
+                  LinkComponent={MobileNavLink}
+                >
+                  {item.label}
+                </NavLinkWithBadge>
+              ) : (
+                <MobileNavLink key={item.label} href={item.href}>
+                  {item.label}
+                </MobileNavLink>
+              ),
+            )}
           </div>
           <div className="pt-4 pb-3 border-t border-gray-200">
             <ConnectButton
