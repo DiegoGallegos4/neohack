@@ -208,7 +208,7 @@ export function UnStakingForm({
           control={form.control}
           name="amount"
           render={({ field }) => (
-            <FormItem className="block h-[100px] rounded-xl  bg-gray-200 ">
+            <FormItem className="block h-[100px] lg:h-[150px] rounded-xl  bg-gray-200 ">
               <FormControl className=" ">
                 <div className="h-full ">
                   <div className=" h-[70%]">
@@ -216,8 +216,9 @@ export function UnStakingForm({
                     <Input
                       type="number"
                       placeholder="0.00"
+                      min={0}
                       {...field}
-                      className="h-full w-full border-transparent outline-transparent ring-transparent shadow-none font-semibold text-xl "
+                      className="h-full w-full border-transparent outline-transparent ring-transparent shadow-none font-semibold text-3xl "
                     />
                   </div>
                   <div className="h-[30%] flex  justify-between">
