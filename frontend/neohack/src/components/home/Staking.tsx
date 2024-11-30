@@ -38,55 +38,72 @@ export default function Staking() {
 
   return (
     <div className="w-full px-4 h-full flex justify-center items-center  flex-col py-10 ">
-      <div className="h-full  w-full max-w-[700px] shadow border rounded-xl px-5 py-5  flex flex-col gap-2 ">
-        <h3 className="h-[10%] flex items-center text-xl font-semibold">
-          Stake to earn
-        </h3>
-        <div className="h-[90%] w-full overflow-y-auto">
-          <div className="grid  lg:grid-cols-2 gap-10 lg:h-[50%] ">
-            <div className="col-span-1">
-              <div className="h-full">
-                <StakingForm
-                  refetchSusde={refetchSusde}
-                  refetchUsde={refetchUsde}
-                />
-              </div>
+      <div className="h-full  w-full  shadow border rounded-xl px-5 py-5  flex flex-col gap-2 ">
+        <div className="h-auto grid grid-cols-1 lg:grid-cols-4 px-3    border py-2">
+          <div className="  h-14  flex flex-row justify-between items-center   lg:flex-col lg:items-start">
+            <span className="font-semibold text-sm flex items-center h-[50%] ">
+              Cooldown period
+            </span>
+            <span className="text-gray-500  text-sm font-bold flex items-center  h-[50%]  ">
+              1 hr
+            </span>
+          </div>
+          <div className="  h-14  flex flex-row justify-between items-center  lg:flex-col lg:items-start">
+            <span className="font-semibold text-sm flex items-center h-[50%] ">
+              USDe balance
+            </span>
+            <span className="text-gray-500  text-sm font-bold flex items-center  h-[50%]  ">
+              {usdeBalance ? Number(formatEther(usdeBalance)).toFixed(2) : 0}
+            </span>
+          </div>
+          <div className="  h-14  flex flex-row justify-between items-center  lg:flex-col lg:items-start">
+            <span className="font-semibold text-sm flex items-center h-[50%] ">
+              SUSDe balance
+            </span>
+            <span className="text-gray-500  text-sm font-bold flex items-center  h-[50%]  ">
+              {susdeBalance ? Number(formatEther(susdeBalance)).toFixed(2) : 0}
+            </span>
+          </div>
+          <div className="  h-14  flex flex-row justify-between items-center  lg:flex-col lg:items-start">
+            <span className="font-semibold text-sm flex items-center h-[50%] ">
+              APY
+            </span>
+            <span className="text-gray-500  text-sm font-bold flex items-center  h-[50%]  ">
+              29 %
+            </span>
+          </div>
+        </div>
+        <div className="flex flex-grow flex-col lg:flex-row gap-10 h-[80%]  overflow-y-auto">
+          <div className="w-full lg:w-[50%] h-full ">
+            <div className="h-[20%] flex flex-col justify-center ">
+              <h3 className="flex items-center font-semibold text-xl">
+                Stake USDe
+              </h3>
+              <p className=" flex items-center  text-sm text-gray-500">
+                Receive mathcing SUSDe when you stake USDe.
+              </p>
             </div>
-            <div className="col-span-1 ">
-              <div className="h-full ">
-                <UnStakingForm
-                  refetchSusde={refetchSusde}
-                  refetchUsde={refetchUsde}
-                />
-              </div>
+            <div className="h-[80%]">
+              <StakingForm
+                refetchSusde={refetchSusde}
+                refetchUsde={refetchUsde}
+              />
             </div>
           </div>
-          <div className="h-[40%] flex flex-col gap-3 i justify-center border-t">
-            <h3 className=" font-semibold">Summary</h3>
-            <div className="flex gap-2 justify-between w-full">
-              <span className="text-gray-500 font-semibold text-sm">
-                Cooldown period
-              </span>
-              <span className="text-primary text-sm font-bold">1 hr</span>
+          <div className="w-full lg:w-[50%] h-full">
+            <div className="h-[20%] flex flex-col justify-center">
+              <h3 className="flex items-center font-semibold text-xl">
+                Claim USDe
+              </h3>
+              <p className=" flex items-center  text-sm text-gray-500">
+                Claim USDe when you stake back SUSDe.
+              </p>
             </div>
-            <div className="flex gap-2 justify-between w-full">
-              <span className="text-gray-500 font-semibold text-sm">
-                USDe balance
-              </span>
-              <span className="text-primary text-sm font-bold">
-                {" "}
-                {usdeBalance ? Number(formatEther(usdeBalance)).toFixed(2) : 0}
-              </span>
-            </div>
-            <div className="flex gap-2 justify-between w-full">
-              <span className="text-gray-500 font-semibold text-sm">
-                SUSDe balance
-              </span>
-              <span className="text-primary text-sm font-bold">
-                {susdeBalance
-                  ? Number(formatEther(susdeBalance)).toFixed(2)
-                  : 0}
-              </span>
+            <div className="h-[80%]">
+              <UnStakingForm
+                refetchSusde={refetchSusde}
+                refetchUsde={refetchUsde}
+              />
             </div>
           </div>
         </div>
