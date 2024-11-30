@@ -17,10 +17,8 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
@@ -75,7 +73,7 @@ export function UnStakingForm() {
   });
 
   function toWeiAmount(amt: number) {
-    return ethers.utils.parseUnits(String(amt), "ether").toString();
+    return ethers.parseUnits(String(amt), "ether").toString();
   }
 
   const amt = form.watch("amount");
@@ -160,7 +158,7 @@ export function UnStakingForm() {
                     </span>
                     <span className="text-gray-600 text-xs font-bold">
                       {usdeRatio
-                        ? Number(ethers.utils.formatEther(usdeRatio)).toFixed(2)
+                        ? Number(ethers.formatEther(usdeRatio)).toFixed(2)
                         : 0}
                     </span>
                   </div>

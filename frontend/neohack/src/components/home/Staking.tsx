@@ -27,13 +27,13 @@ export default function Staking() {
   const { data: susdeBalance } = useReadContract({
     contract,
     method: "function balanceOf(address) returns (uint256)",
-    params: [activeAccount?.address ?? ethers.constants.AddressZero],
+    params: [activeAccount?.address ?? ethers.ZeroAddress],
   });
 
   const { data: usdeBalance } = useReadContract({
     contract: tokenContract,
     method: "function balanceOf(address) returns (uint256)",
-    params: [activeAccount?.address ?? ethers.constants.AddressZero],
+    params: [activeAccount?.address ?? ethers.ZeroAddress],
   });
 
   return (
@@ -70,7 +70,7 @@ export default function Staking() {
               <span className="text-primary text-sm font-bold">
                 {" "}
                 {usdeBalance
-                  ? Number(ethers.utils.formatEther(usdeBalance)).toFixed(2)
+                  ? Number(ethers.formatEther(usdeBalance)).toFixed(2)
                   : 0}
               </span>
             </div>
@@ -80,7 +80,7 @@ export default function Staking() {
               </span>
               <span className="text-primary text-sm font-bold">
                 {susdeBalance
-                  ? Number(ethers.utils.formatEther(susdeBalance)).toFixed(2)
+                  ? Number(ethers.formatEther(susdeBalance)).toFixed(2)
                   : 0}
               </span>
             </div>
