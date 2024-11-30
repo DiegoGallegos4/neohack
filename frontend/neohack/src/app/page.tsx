@@ -244,8 +244,7 @@ export default function Home() {
   const data = getData();
   return (
     <AppLayout>
-      <div className="h-[6%] flex place-items-center  justify-between px-4 border-b">
-        <SidebarTrigger />
+      <div className="h-[6%] flex place-items-center  justify-end px-4 border-b">
         <ConnectButton
           connectButton={{
             label: "Connect",
@@ -263,25 +262,9 @@ export default function Home() {
         />
       </div>
       <div className="h-[94%] flex">
-        <div className="w-full  bg-secondary h-full">
-          {/* <div className="h-[10%]">
-
-          </div> */}
-
-          {/* <DataTable columns={columns} data={data} /> */}
-
-          <div className="h-[30%]  flex flex-col gap-4 justify-center bg-slate-900 text-white px-4">
-            <h3 className="font-semibold text-xl">High Yield Savings</h3>
-            <p className=" prose text-white">
-              Stake your USDE tokens to earn rewards and support the protocol’s
-              stability. By staking, you unlock competitive yields while adding
-              a layer of security to the neobank. In rare shortfall events, a
-              portion of your stake may be used to maintain balance, ensuring
-              long-term sustainability.
-            </p>
-          </div>
-          <div className="h-[70%] w-full overflow-y-auto">
-            <Staking />
+        <div className="w-[70%] px-4  bg-secondary h-full">
+          <div className="h-[90%]">
+            <DataTable columns={columns} data={data} />
           </div>
         </div>
       </div>

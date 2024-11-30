@@ -19,24 +19,14 @@ const items = [
     icon: Home,
   },
   {
-    title: "Inbox",
-    url: "#",
+    title: "Investments",
+    url: "/funding",
     icon: Inbox,
   },
   {
-    title: "Calendar",
-    url: "#",
+    title: "Lending",
+    url: "/lending",
     icon: Calendar,
-  },
-  {
-    title: "Search",
-    url: "#",
-    icon: Search,
-  },
-  {
-    title: "Settings",
-    url: "#",
-    icon: Settings,
   },
 ];
 
@@ -46,7 +36,7 @@ export function AppSidebar() {
       <SidebarContent>
         <SidebarGroup>
           <h1 className=" font-bold h-14  flex items-center justify-center text-xl">
-            Neo-Hack
+            EthBank
           </h1>
           <SidebarGroupLabel className="text-xl text-primary"></SidebarGroupLabel>
           <SidebarGroupContent>
