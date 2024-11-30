@@ -1,13 +1,8 @@
 "use client";
 import { ethers } from "ethers";
-import { useEffect } from "react";
-import { getContract, prepareContractCall } from "thirdweb";
+import { getContract } from "thirdweb";
 import { sepolia } from "thirdweb/chains";
-import {
-  useActiveAccount,
-  useReadContract,
-  useSendAndConfirmTransaction,
-} from "thirdweb/react";
+import { useActiveAccount, useReadContract } from "thirdweb/react";
 
 import { client } from "../../app/client";
 
@@ -32,13 +27,13 @@ export default function Staking() {
   const { data: susdeBalance } = useReadContract({
     contract,
     method: "function balanceOf(address) returns (uint256)",
-    params: [activeAccount?.address],
+    params: [activeAccount?.address ?? ethers.constants.AddressZero],
   });
 
   const { data: usdeBalance } = useReadContract({
     contract: tokenContract,
     method: "function balanceOf(address) returns (uint256)",
-    params: [activeAccount?.address],
+    params: [activeAccount?.address ?? ethers.constants.AddressZero],
   });
 
   return (

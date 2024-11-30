@@ -78,11 +78,11 @@ export function UnStakingForm() {
     return ethers.utils.parseUnits(String(amt), "ether").toString();
   }
 
-  const amt = form.watch("amount", "");
+  const amt = form.watch("amount");
   const { data: usdeRatio } = useReadContract({
     contract,
-    method: "function convertToAssets(uint256) returns(uint256)",
-    params: [BigInt(toWeiAmount(Number(amt)))],
+    method: "function convertToAssets(uint256) returns(uint256)", 
+    params: [BigInt(toWeiAmount(Number(amt) || 0))],
   });
 
   //  Define a submit handler.

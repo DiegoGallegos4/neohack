@@ -17,10 +17,8 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
@@ -78,11 +76,11 @@ export function StakingForm() {
     return ethers.utils.parseUnits(String(amt), "ether").toString();
   }
 
-  const amt = form.watch("amount", "");
+  const amt = form.watch("amount");
   const { data: susdeRatio } = useReadContract({
     contract,
-    method: "function convertToShares(uint256) returns(uint256)",
-    params: [BigInt(toWeiAmount(Number(amt)))],
+    method: "function convertToShares(uint256) returns(uint256)", 
+    params: [BigInt(toWeiAmount(Number(amt) || 0))],
   });
 
   //  Define a submit handler.
