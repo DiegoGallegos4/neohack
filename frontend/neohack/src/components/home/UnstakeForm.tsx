@@ -166,9 +166,11 @@ export function UnStakingForm({
 
   useEffect(() => {
     if (unStakeSuccess || unStakeError) {
-      setIsLoading(false);
       //remove amount set to be cooled
       localStorage.removeItem("coolAmount");
+      setOldValue(0);
+      setIsLoading(false);
+
       refetchUsde();
       refetchSusde();
       form.resetField("amount");
