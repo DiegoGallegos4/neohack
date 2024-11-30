@@ -1,10 +1,10 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ethers } from "ethers";
+import { formatEther, parseEther } from "ethers";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { getContract, prepareContractCall, toWei } from "thirdweb";
+import { getContract, prepareContractCall } from "thirdweb";
 import { sepolia } from "thirdweb/chains";
 import {
   useActiveAccount,
@@ -46,7 +46,13 @@ const tokenContract = getContract({
   client,
 });
 
-export function StakingForm() {
+export function StakingForm({
+  refetchSusde,
+  refetchUsde,
+}: {
+  refetchSusde: () => void;
+  refetchUsde: () => void;
+}) {
   const [isLoading, setIsLoading] = useState(false);
   const activeAccount = useActiveAccount();
 
@@ -73,13 +79,13 @@ export function StakingForm() {
   });
 
   function toWeiAmount(amt: number) {
-    return ethers.parseUnits(String(amt), "ether").toString();
+    return parseEther(String(amt)).toString();
   }
 
   const amt = form.watch("amount");
   const { data: susdeRatio } = useReadContract({
     contract,
-    method: "function convertToShares(uint256) returns(uint256)", 
+    method: "function convertToShares(uint256) returns(uint256)",
     params: [BigInt(toWeiAmount(Number(amt) || 0))],
   });
 
@@ -122,13 +128,12 @@ export function StakingForm() {
   useEffect(() => {
     if (stakeSuccess || stakeError) {
       setIsLoading(false);
+      //refetch data
+      refetchUsde();
+      refetchSusde();
       form.resetField("amount");
     }
   }, [stakeSuccess]);
-
-  useEffect(() => {
-    console.log(amt);
-  }, [amt]);
 
   return (
     <Form {...form}>
@@ -154,13 +159,11 @@ export function StakingForm() {
                   </div>
                   <div className="h-[30%] flex px-3 gap-2">
                     <span className="text-gray-500 font-semibold text-xs">
-                      Matching SUSDe:
+                      SUSDe Ratio:
                     </span>
                     <span className="text-gray-600 text-xs font-bold">
                       {susdeRatio
-                        ? Number(ethers.formatEther(susdeRatio)).toFixed(
-                            2,
-                          )
+                        ? Number(formatEther(susdeRatio)).toFixed(2)
                         : 0}
                     </span>
                   </div>
