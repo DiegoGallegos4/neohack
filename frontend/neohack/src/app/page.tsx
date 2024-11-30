@@ -243,31 +243,6 @@ function getData(): Transaction[] {
 export default function Home() {
   const data = getData();
   return (
-    <AppLayout>
-      <div className="h-[6%] flex place-items-center  justify-end px-4 border-b">
-        <ConnectButton
-          connectButton={{
-            label: "Connect",
-            className: "bg-red-400",
-            style: {
-              backgroundColor: "black",
-              color: "white",
-            },
-          }}
-          client={client}
-          appMetadata={{
-            name: "NeoHack",
-            url: "https://neohack.vercel.com",
-          }}
-        />
-      </div>
-      <div className="h-[94%] flex">
-        <div className="w-[70%] px-4  bg-secondary h-full">
-          <div className="h-[90%]">
-            <DataTable columns={columns} data={data} />
-          </div>
-        </div>
-      </div>
-    </AppLayout>
+    <>landing</>
   );
 }
