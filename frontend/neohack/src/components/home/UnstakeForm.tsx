@@ -178,11 +178,10 @@ export function UnStakingForm({
   useEffect(() => {
     if (coolingSuccess) {
       startCountdown();
+      const val = oldValue + Number(form.getValues("amount"));
       //save amount being cooled
-      localStorage.setItem(
-        "coolAmount",
-        (oldValue + form.getValues("amount")).toString(),
-      );
+      localStorage.setItem("coolAmount", val.toString());
+      setOldValue(val);
       form.resetField("amount");
       setCoolingLoading(false);
     }
@@ -235,7 +234,7 @@ export function UnStakingForm({
                         Available :
                       </span>
                       <span className="text-gray-600 text-xs font-bold">
-                        {oldValue}
+                        {countdownRunning() ? 0 : oldValue}
                       </span>
                     </div>
 
@@ -277,7 +276,9 @@ export function UnStakingForm({
           <Button
             type="button"
             onClick={startUnstake}
-            disabled={isLoading || unStakePending || oldValue == 0}
+            disabled={
+              isLoading || unStakePending || oldValue == 0 || countdownRunning()
+            }
             className="w-full h-full"
           >
             {isLoading || unStakePending ? (
