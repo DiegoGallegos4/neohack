@@ -145,7 +145,7 @@ export function StakingForm({
           control={form.control}
           name="amount"
           render={({ field }) => (
-            <FormItem className="block h-[100px] lg:h-[150px] rounded-xl  bg-gray-200 ">
+            <FormItem className="block h-[85px] lg:h-[150px] rounded-xl  bg-gray-200 ">
               <FormControl className=" ">
                 <div className="h-full ">
                   <div className=" h-[70%]">

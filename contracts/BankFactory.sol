@@ -92,7 +92,6 @@ contract BankFactory is Ownable {
         address _institutionAccount
     ) public onlyOwner returns (address) {
         require(nameToIndex[_name] == 0, "Name has already been taken");
-
         LendingPool newPool = new LendingPool(
             _usde,
             _targetAmount,

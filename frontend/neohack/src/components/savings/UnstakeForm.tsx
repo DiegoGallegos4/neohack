@@ -208,7 +208,7 @@ export function UnStakingForm({
           control={form.control}
           name="amount"
           render={({ field }) => (
-            <FormItem className="block h-[100px] lg:h-[150px] rounded-xl  bg-gray-200 ">
+            <FormItem className="block h-[85px] lg:h-[150px] rounded-xl  bg-gray-200">
               <FormControl className=" ">
                 <div className="h-full ">
                   <div className=" h-[70%]">
@@ -234,7 +234,7 @@ export function UnStakingForm({
                     </div>
                     <div className="h-full flex px-3 gap-2">
                       <span className="text-gray-500 font-semibold text-xs">
-                        Available :
+                        Cooled :
                       </span>
                       <span className="text-gray-600 text-xs font-bold">
                         {countdownRunning() ? 0 : oldValue}
