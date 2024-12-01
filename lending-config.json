@@ -1,0 +1,17 @@
+{
+    "version": "1",
+    "name": "ethbank-lending",
+    "abis": {
+      "lending": {
+        "path": "./lending.abi.json"
+      }
+    },
+    "instances": [
+      {
+        "abi": "lending",
+        "address": "0x8Db80Ef2D4205769e9e027B72B8312C129E4FC29",
+        "startBlock": 7191155,
+        "chain": "sepolia"
+      }
+    ]
+  }
