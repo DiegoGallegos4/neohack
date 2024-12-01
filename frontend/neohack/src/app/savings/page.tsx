@@ -1,8 +1,8 @@
 "use client";
 
 import AppLayout from "@/components/AppLayout";
-import Staking from "@/components/home/Staking";
 import Banner from "@/components/savings/Banner";
+import Staking from "@/components/savings/Staking";
 // import { Transaction } from "@/components/columns";
 
 // function getData(): Transaction[] {
