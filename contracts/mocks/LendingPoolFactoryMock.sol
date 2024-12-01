@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: SEE LICENSE IN LICENSE
 pragma solidity ^0.8.22;
 
-import "../LendingPoolFactory.sol";
+import "../BankFactory.sol";
 
-contract LendingPoolFactoryMock is LendingPoolFactory {
-    constructor() LendingPoolFactory() {}
+contract LendingPoolFactoryMock is BankFactory {
+    constructor() BankFactory() {}
 
     // Mock function to manipulate pool index for testing
     function setPoolIdx(uint256 _idx) external {
@@ -23,11 +23,11 @@ contract LendingPoolFactoryMock is LendingPoolFactory {
 
     // Mock function to set pool state
     function setPoolState(uint256 _poolId, bool _state) external {
-        pools[_poolId].setPoolActive(_state);
+        pools[_poolId].setPoolState(_state);
     }
 
     // Mock function to get pools length
     function getPoolsLength() external view returns (uint256) {
         return pools.length;
     }
-} 
+}

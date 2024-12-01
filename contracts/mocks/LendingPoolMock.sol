@@ -12,19 +12,23 @@ contract LendingPoolMock is LendingPool {
         uint256 _distributionDuration,
         uint256 _repaymentDuration,
         uint256 _lendingRate,
-        uint256 _borrowingRate
-    ) LendingPool(
-        _token,
-        _targetAmount,
-        _fundingDuration,
-        _distributionDuration,
-        _repaymentDuration,
-        _lendingRate,
-        _borrowingRate
-    ) {}
+        uint256 _borrowingRate,
+        address _institutionAccount
+    )
+        LendingPool(
+            _token,
+            _targetAmount,
+            _fundingDuration,
+            _distributionDuration,
+            _repaymentDuration,
+            _lendingRate,
+            _borrowingRate,
+            _institutionAccount
+        )
+    {}
 
     // Add mock functions here to manipulate time or state for testing
-    function setPoolState(bool _state) external {
+    function changePoolState(bool _state) external {
         pool.isActive = _state;
     }
-} 
+}
