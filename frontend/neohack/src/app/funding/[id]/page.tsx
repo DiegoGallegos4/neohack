@@ -22,14 +22,15 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { useRouter } from "next/router";
+import { useSearchParams } from "next/navigation";
 
 const propertyDetails = mockProperties[0];
 
 export default function PropertyDetail({ params }: { params: { id: string } }) {
-  const router = useRouter();
-  const property = router.query.propertyData
-    ? JSON.parse(router.query.propertyData as string)
+  const searchParams = useSearchParams();
+
+  const property = searchParams.get("propertyData")
+    ? JSON.parse(searchParams.get("propertyData") as string)
     : null;
   const propertyData = {
     ...property,
