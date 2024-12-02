@@ -40,6 +40,11 @@
         "internalType": "uint256",
         "name": "_borrowingRate",
         "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "_institutionAccount",
+        "type": "address"
       }
     ],
     "stateMutability": "nonpayable",
@@ -294,6 +299,19 @@
     "type": "function"
   },
   {
+    "inputs": [
+      {
+        "internalType": "bool",
+        "name": "_state",
+        "type": "bool"
+      }
+    ],
+    "name": "changePoolState",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
     "inputs": [],
     "name": "claimRewards",
     "outputs": [],
@@ -416,13 +434,24 @@
         "internalType": "uint256",
         "name": "lastUpdateTime",
         "type": "uint256"
+      },
+      {
+        "internalType": "bool",
+        "name": "rewardInActive",
+        "type": "bool"
       }
     ],
     "stateMutability": "view",
     "type": "function"
   },
   {
-    "inputs": [],
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_amount",
+        "type": "uint256"
+      }
+    ],
     "name": "initiateStakingCooldown",
     "outputs": [],
     "stateMutability": "nonpayable",
@@ -528,6 +557,11 @@
         "type": "uint256"
       },
       {
+        "internalType": "address",
+        "name": "institutionAccount",
+        "type": "address"
+      },
+      {
         "internalType": "uint256",
         "name": "repaymentEndTime",
         "type": "uint256"
@@ -572,19 +606,6 @@
       }
     ],
     "name": "repay",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "bool",
-        "name": "_status",
-        "type": "bool"
-      }
-    ],
-    "name": "setPoolActive",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -646,7 +667,7 @@
     "name": "usde",
     "outputs": [
       {
-        "internalType": "contract IUSDE",
+        "internalType": "contract ERC20",
         "name": "",
         "type": "address"
       }
@@ -683,6 +704,11 @@
         "internalType": "uint256",
         "name": "lastUpdateTime",
         "type": "uint256"
+      },
+      {
+        "internalType": "bool",
+        "name": "rewardInActive",
+        "type": "bool"
       }
     ],
     "stateMutability": "view",

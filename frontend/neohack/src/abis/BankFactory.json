@@ -174,19 +174,6 @@
   {
     "inputs": [
       {
-        "internalType": "contract LendingPool",
-        "name": "_pool",
-        "type": "address"
-      }
-    ],
-    "name": "addPool",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
         "internalType": "string",
         "name": "_name",
         "type": "string"
@@ -323,19 +310,6 @@
   },
   {
     "inputs": [],
-    "name": "getPoolsLength",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
     "name": "owner",
     "outputs": [
       {
@@ -382,55 +356,6 @@
   {
     "inputs": [],
     "name": "renounceOwnership",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "string",
-        "name": "_name",
-        "type": "string"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_idx",
-        "type": "uint256"
-      }
-    ],
-    "name": "setNameToIndex",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_idx",
-        "type": "uint256"
-      }
-    ],
-    "name": "setPoolIdx",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_poolId",
-        "type": "uint256"
-      },
-      {
-        "internalType": "bool",
-        "name": "_state",
-        "type": "bool"
-      }
-    ],
-    "name": "setPoolState",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
