@@ -11,8 +11,9 @@
 <p align="center">ETHBank seamlessly combines TradFi's trust with DeFi's innovation, offering a compliant and accessible <code>hybrid financial</code> ecosystem.</p>
 
 ## Overview
-
-![img](https://github.com/user-attachments/assets/e5e0b564-cf49-4c96-89b3-bb9554ba1f54)
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/e5e0b564-cf49-4c96-89b3-bb9554ba1f54">
+</p>
 
 ETHBank bridges the gap between traditional finance (**TradFi**) and decentralized finance (**DeFi**), combining the trusted elements of banking with the innovation of blockchain. 
 Built on **`Ethena`**’s permissionless, high-yield infrastructure, ETHBank offers a hybrid financial ecosystem that integrates TradFi-like features with decentralized solutions, ensuring both compliance and user accessibility.
