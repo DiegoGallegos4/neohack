@@ -90,3 +90,9 @@ Built on **`Ethena`**’s permissionless, high-yield infrastructure, ETHBank off
 
 5. **DeFi Developers and Builders**  
    - Innovators exploring integrated blockchain financial solutions for creating new applications and services.  
+
+
+## Usage
+
+1. Ethena: Staking/Unstaking on high yield savings account. Also used on staking when users deposit on lending pool.
+2. Goldsky: Created subgraph `/frontend/ethbank-sub`. [Graphql API](https://api.goldsky.com/api/public/project_cm3xynyhkldn001x32ywkffo0/subgraphs/ethbank-subgraph/1.0.0/gn)
