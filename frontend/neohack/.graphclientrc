@@ -1,0 +1,8 @@
+sources:
+  - name: uniswapv2
+    handler:
+      graphql:
+        endpoint: https://api.goldsky.com/api/public/project_cm3xynyhkldn001x32ywkffo0/subgraphs/lending-sepolia/v1/gn
+
+documents:
+  - ./src/queries/getProjects.graphql

@@ -1,0 +1,44 @@
+specVersion: 1.0.0
+indexerHints:
+  prune: auto
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: BankFactory
+    network: sepolia
+    source:
+      address: "0x8db80ef2d4205769e9e027b72b8312c129e4fc29"
+      abi: BankFactory
+      startBlock: 7191155
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - NewLendingPool
+        - OwnershipTransferred
+        - PoolStateChange
+        - TokenCoolDown
+        - TokenDistribution
+        - TokenStaked
+        - TokenUnstaked
+      abis:
+        - name: BankFactory
+          file: ./abis/BankFactory.json
+      eventHandlers:
+        - event: NewLendingPool(indexed string,address,address)
+          handler: handleNewLendingPool
+        - event: OwnershipTransferred(indexed address,indexed address)
+          handler: handleOwnershipTransferred
+        - event: PoolStateChange(indexed string,bool)
+          handler: handlePoolStateChange
+        - event: TokenCoolDown(indexed string,uint256,uint256)
+          handler: handleTokenCoolDown
+        - event: TokenDistribution(indexed string,uint256)
+          handler: handleTokenDistribution
+        - event: TokenStaked(indexed string,uint256)
+          handler: handleTokenStaked
+        - event: TokenUnstaked(indexed string,uint256)
+          handler: handleTokenUnstaked
+      file: ./src/bank-factory.ts

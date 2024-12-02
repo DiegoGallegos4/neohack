@@ -1,0 +1,64 @@
+type NewLendingPool @entity(immutable: true) {
+  id: Bytes!
+  name: String! # string
+  owner: Bytes! # address
+  poolAddress: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type OwnershipTransferred @entity(immutable: true) {
+  id: Bytes!
+  previousOwner: Bytes! # address
+  newOwner: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type PoolStateChange @entity(immutable: true) {
+  id: Bytes!
+  name: String! # string
+  state: Boolean! # bool
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type TokenCoolDown @entity(immutable: true) {
+  id: Bytes!
+  name: String! # string
+  amount: BigInt! # uint256
+  time: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type TokenDistribution @entity(immutable: true) {
+  id: Bytes!
+  name: String! # string
+  amount: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type TokenStaked @entity(immutable: true) {
+  id: Bytes!
+  name: String! # string
+  amount: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type TokenUnstaked @entity(immutable: true) {
+  id: Bytes!
+  name: String! # string
+  amount: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}

@@ -1,9 +1,10 @@
+import { gql, useQuery } from "@apollo/client";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
+import { useActiveAccount } from "thirdweb/react";
 
 import { ProgressBar } from "./ProgressBar";
-
 interface Property {
   id: string;
   image: string;
@@ -68,7 +69,25 @@ const mockProperties: Property[] = [
   },
 ];
 
+const projectQuery = gql`
+  query GetProjects {
+    newLendingPools {
+      id
+      name
+      poolAddress
+      timestamp_
+      transactionHash_
+      owner
+    }
+  }
+`;
+
 export function PropertyGrid() {
+  const { loading, error, data } = useQuery(projectQuery);
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error.message}</p>;
+  console.log("DATA", data);
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
       {mockProperties.map((property) => (

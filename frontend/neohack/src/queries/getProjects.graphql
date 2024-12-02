@@ -1,0 +1,10 @@
+query GetProjects {
+  newLendingPools {
+    id
+    name
+    poolAddress
+    timestamp_
+    transactionHash_
+    owner
+  }
+}
