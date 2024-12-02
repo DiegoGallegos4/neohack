@@ -7,6 +7,7 @@ import { FilterSort } from "../../components/FilterSort";
 import { Hero } from "../../components/Hero";
 import { PropertyGrid } from "../../components/PropertyGrid";
 import { StatsCard } from "../../components/StatsCard";
+import Banner from "@/components/savings/Banner";
 
 const client = new ApolloClient({
   uri: "https://api.goldsky.com/api/public/project_cm3xynyhkldn001x32ywkffo0/subgraphs/ethbank-subgraph/1.0.0/gn",
@@ -17,11 +18,9 @@ export default function Home() {
   return (
     <ApolloProvider client={client}>
       <main className="min-h-screen bg-gray-100">
-        <Hero
+        <Banner
           title="Invest in Real Estate, Simplified"
-          subtitle="Access exclusive property investments and grow your wealth with our crowdfunding platform."
-          ctaText="Start Investing Now"
-          ctaLink="#properties"
+          description="Access exclusive property investments and grow your wealth by providing liquidity to the protocol. Our escrow contract ensures that your funds are secure and that the property is managed properly. We supervise the progress and fund it based on our compliance system."
         />
         <div className="container mx-auto py-12">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
