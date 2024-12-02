@@ -1,3 +1,6 @@
+'use client';
+
+import { ethers, parseEther } from "ethers";
 import {
   ArrowLeft,
   Calendar,
@@ -10,9 +13,15 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
+import { getContract, prepareContractCall, readContract } from "thirdweb";
+import { sepolia } from "thirdweb/chains";
+import { useActiveAccount, useSendAndConfirmTransaction } from "thirdweb/react";
 
+import { client } from "@/app/client";
 import { InvestmentForm } from "@/components/InvestmentForm";
 import { ProgressBar } from "@/components/ProgressBar";
+import { mockProperties } from "@/components/funding/utils";
 import {
   Tooltip,
   TooltipContent,
@@ -20,32 +29,16 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 
-// This would typically come from an API or database
-const propertyDetails = {
-  id: "1",
-  image: "/placeholder.svg?height=400&width=600",
-  title: "Downtown Apartment Complex",
-  investmentType: "Real Estate",
-  annualReturn: 12.5,
-  term: 36,
-  investors: 120,
-  currentInvestment: 3750000,
-  target: 5000000,
-  riskCategory: "Medium",
-  ltv: 65,
-  location: "New York, NY",
-  minInvestment: 5000,
-};
+const propertyDetails = mockProperties[0];
 
 export default function PropertyDetail({ params }: { params: { id: string } }) {
-  // In a real application, you would fetch the property details based on the ID
-  // const propertyDetails = await getPropertyDetails(params.id)
+  const activeAccount = useActiveAccount();
 
   return (
     <main className="min-h-screen bg-gray-100 py-8">
       <div className="container mx-auto px-4">
         <Link
-          href="/"
+          href="/funding"
           className="inline-flex items-center text-blue-600 hover:underline mb-6"
         >
           <ArrowLeft className="mr-2 h-4 w-4" />
@@ -101,6 +94,7 @@ export default function PropertyDetail({ params }: { params: { id: string } }) {
                 <InvestmentForm
                   propertyName={propertyDetails.title}
                   minInvestment={propertyDetails.minInvestment}
+                  poolContract={params.id}
                 />
               </div>
             </div>
