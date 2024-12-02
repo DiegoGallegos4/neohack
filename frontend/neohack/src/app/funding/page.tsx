@@ -9,7 +9,7 @@ import { PropertyGrid } from "../../components/PropertyGrid";
 import { StatsCard } from "../../components/StatsCard";
 
 const client = new ApolloClient({
-  uri: "https://api.goldsky.com/api/public/project_cm3xynyhkldn001x32ywkffo0/subgraphs/lending-sepolia/v1/gn",
+  uri: "https://api.goldsky.com/api/public/project_cm3xynyhkldn001x32ywkffo0/subgraphs/ethbank-subgraph/1.0.0/gn",
   cache: new InMemoryCache(),
 });
 

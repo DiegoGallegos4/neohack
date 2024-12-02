@@ -3,6 +3,7 @@ type NewLendingPool @entity(immutable: true) {
   name: String! # string
   owner: Bytes! # address
   poolAddress: Bytes! # address
+  pool: Pool!
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
@@ -61,4 +62,131 @@ type TokenUnstaked @entity(immutable: true) {
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
+}
+type Deposited @entity(immutable: true) {
+  id: Bytes!
+  depositor: Bytes! # address
+  amount: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type DistributedToInstitution @entity(immutable: true) {
+  id: Bytes!
+  amount: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type InstallmentDistributed @entity(immutable: true) {
+  id: Bytes!
+  installmentNumber: BigInt! # uint256
+  amount: BigInt! # uint256
+  timestamp: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type LendingPoolOwnershipTransferred @entity(immutable: true) {
+  id: Bytes!
+  previousOwner: Bytes! # address
+  newOwner: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type Repaid @entity(immutable: true) {
+  id: Bytes!
+  amount: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type RepaymentReceived @entity(immutable: true) {
+  id: Bytes!
+  repaymentNumber: BigInt! # uint256
+  amount: BigInt! # uint256
+  timestamp: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type RewardsClaimed @entity(immutable: true) {
+  id: Bytes!
+  depositor: Bytes! # address
+  amount: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type Staked @entity(immutable: true) {
+  id: Bytes!
+  amount: BigInt! # uint256
+  newTotalStaked: BigInt! # uint256
+  newAvailableAmount: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type StakingCooldownInitiated @entity(immutable: true) {
+  id: Bytes!
+  timestamp: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type TargetReached @entity(immutable: true) {
+  id: Bytes!
+
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type Unstaked @entity(immutable: true) {
+  id: Bytes!
+  amount: BigInt! # uint256
+  newTotalStaked: BigInt! # uint256
+  newAvailableAmount: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type Pool @entity {
+  id: ID!
+  targetAmount: BigInt!
+  totalDeposits: BigInt!
+  availableAmount: BigInt!
+  totalStaked: BigInt!
+  totalDistributed: BigInt!
+  stakingRewards: BigInt!
+  fundingEndTime: BigInt!
+  distributionEndTime: BigInt!
+  institutionAccount: Bytes!
+  repaymentEndTime: BigInt!
+  lendingRate: BigInt!
+  borrowingRate: BigInt!
+  installments: BigInt!
+  isActive: Boolean!
+  institution: Institution!
+}
+
+type Institution @entity {
+  id: ID!
+  pool: Pool!
+  totalBorrowed: BigInt!
+  totalRepaid: BigInt!
+  installmentsPaid: BigInt!
+  installments: [BigInt!]!
+  repayments: [BigInt!]!
 }

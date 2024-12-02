@@ -3,6 +3,9 @@
     "BankFactory": {
       "address": "0x8db80ef2d4205769e9e027b72b8312c129e4fc29",
       "startBlock": 7191155
+    },
+    "LendingPool": {
+      "address": "0x1185fb281c150Af78d5592e1992387f0C155b429"
     }
   }
 }

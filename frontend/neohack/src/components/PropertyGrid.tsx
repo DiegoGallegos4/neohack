@@ -21,7 +21,7 @@ interface Property {
 const mockProperties: Property[] = [
   {
     id: "1",
-    image: "/placeholder.svg?height=200&width=300",
+    image: "/re-1.jpeg",
     title: "Downtown Apartment Complex",
     investors: 120,
     target: 5000000,
@@ -33,7 +33,7 @@ const mockProperties: Property[] = [
   },
   {
     id: "2",
-    image: "/placeholder.svg?height=200&width=300",
+    image: "/re-2.jpeg",
     title: "Suburban Office Park",
     investors: 85,
     target: 8000000,
@@ -43,41 +43,27 @@ const mockProperties: Property[] = [
     term: 48,
     location: "Chicago, IL",
   },
-  {
-    id: "3",
-    image: "/placeholder.svg?height=200&width=300",
-    title: "Beachfront Hotel",
-    investors: 200,
-    target: 15000000,
-    currentInvestment: 12000000,
-    expectedReturn: 15.2,
-    minInvestment: 25000,
-    term: 60,
-    location: "Miami, FL",
-  },
-  {
-    id: "4",
-    image: "/placeholder.svg?height=200&width=300",
-    title: "Industrial Warehouse",
-    investors: 60,
-    target: 3000000,
-    currentInvestment: 1500000,
-    expectedReturn: 9.7,
-    minInvestment: 2500,
-    term: 24,
-    location: "Dallas, TX",
-  },
 ];
 
 const projectQuery = gql`
   query GetProjects {
     newLendingPools {
       id
+      pool {
+        borrowingRate
+        targetAmount
+        distributionEndTime
+        isActive
+        lendingRate
+        totalDeposits
+        totalDistributed
+        totalStaked
+        availableAmount
+        institution {
+          id
+        }
+      }
       name
-      poolAddress
-      timestamp_
-      transactionHash_
-      owner
     }
   }
 `;
@@ -87,7 +73,7 @@ export function PropertyGrid() {
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
-  console.log("DATA", data);
+  console.log(data);
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
       {mockProperties.map((property) => (

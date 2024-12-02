@@ -16,6 +16,8 @@ dataSources:
       apiVersion: 0.0.7
       language: wasm/assemblyscript
       entities:
+        - Pool
+        - Institution
         - NewLendingPool
         - OwnershipTransferred
         - PoolStateChange
@@ -26,6 +28,8 @@ dataSources:
       abis:
         - name: BankFactory
           file: ./abis/BankFactory.json
+        - name: LendingPool  # Add this section
+          file: ./abis/LendingPool.json 
       eventHandlers:
         - event: NewLendingPool(indexed string,address,address)
           handler: handleNewLendingPool
@@ -42,3 +46,53 @@ dataSources:
         - event: TokenUnstaked(indexed string,uint256)
           handler: handleTokenUnstaked
       file: ./src/bank-factory.ts
+
+templates:
+  - kind: ethereum
+    name: LendingPool
+    network: sepolia
+    source:
+      abi: LendingPool
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      file: ./src/lending-pool.ts
+      entities:
+        - Deposited
+        - DistributedToInstitution
+        - InstallmentDistributed
+        - LendingPoolOwnershipTransferred
+        - Repaid
+        - RepaymentReceived
+        - RewardsClaimed
+        - Staked
+        - StakingCooldownInitiated
+        - TargetReached
+        - Unstaked
+      abis:
+        - name: LendingPool
+          file: ./abis/LendingPool.json
+      eventHandlers:
+        - event: Deposited(indexed address,uint256)
+          handler: handleDeposited
+        - event: DistributedToInstitution(uint256)
+          handler: handleDistributedToInstitution
+        - event: InstallmentDistributed(uint256,uint256,uint256)
+          handler: handleInstallmentDistributed
+        - event: OwnershipTransferred(indexed address,indexed address)
+          handler: handleOwnershipTransferred
+        - event: Repaid(uint256)
+          handler: handleRepaid
+        - event: RepaymentReceived(uint256,uint256,uint256)
+          handler: handleRepaymentReceived
+        - event: RewardsClaimed(indexed address,uint256)
+          handler: handleRewardsClaimed
+        - event: Staked(uint256,uint256,uint256)
+          handler: handleStaked
+        - event: StakingCooldownInitiated(uint256)
+          handler: handleStakingCooldownInitiated
+        - event: TargetReached()
+          handler: handleTargetReached
+        - event: Unstaked(uint256,uint256,uint256)
+          handler: handleUnstaked
