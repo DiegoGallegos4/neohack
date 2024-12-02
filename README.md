@@ -46,6 +46,10 @@ Built on **`Ethena`**’s permissionless, high-yield infrastructure, ETHBank off
   - Insufficient funding opportunities for smaller investors and niche projects.
 
 ## Solution
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/7972054c-5a2a-45e0-a1c4-6b21fadea8ce">
+</p>
+
 - Simplify UX/UI for seamless TradFi and DeFi integration.
 - Offer stable, inclusive financial products like cross-border payments and high-yield savings.
 - Enable efficient funding pools for startups and smaller investors.
