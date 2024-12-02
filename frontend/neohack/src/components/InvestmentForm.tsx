@@ -93,7 +93,7 @@ export function InvestmentForm({
     setAmount(weiAmount);
 
     //approval
-    const spender = process.env.NEXT_PUBLIC_SUSDE as string;
+    const spender = poolContract as string;
     const approvalTransaction = prepareContractCall({
       contract: tokenContract,
       method: "function approve(address spender, uint256 amount)",
@@ -102,7 +102,7 @@ export function InvestmentForm({
     sendAndConfirmTx(approvalTransaction);
   }
 
-  const deposit = useCallback(() => {
+  const deposit = () => {
     if (!activeAccount?.address) return;
     const transaction = prepareContractCall({
       contract: poolContractInstance,
@@ -111,12 +111,7 @@ export function InvestmentForm({
     });
     console.log("transaction", transaction);
     sendAndConfirmDeposit(transaction);
-  }, [
-    activeAccount?.address,
-    amount,
-    poolContractInstance,
-    sendAndConfirmDeposit,
-  ]);
+  };
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
