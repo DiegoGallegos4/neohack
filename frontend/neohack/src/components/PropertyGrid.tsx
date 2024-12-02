@@ -39,6 +39,7 @@ export function PropertyGrid() {
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
       {data?.newLendingPools.map((property, idx) => {
@@ -57,7 +58,10 @@ export function PropertyGrid() {
         };
         return (
           <Link
-            href={`/funding/${property.poolAddress}`}
+            href={{
+              pathname: `/funding/${property.poolAddress}`,
+              query: { propertyData: JSON.stringify(propertyData) },
+            }}
             key={property.id}
             className="block"
           >

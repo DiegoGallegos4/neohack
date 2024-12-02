@@ -1,11 +1,11 @@
 <p align="center">
-  <a href="https://neohack.vercel.app/" style="color: #a77dff">ETH Bank</a> | <a href="https://www.miricanvas.com/v/13y5u71" style="color: #a77dff">Pitchdeck</a> | <a href="" style="color: #a77dff">Demo video</a>
+  <a href="https://neohack.vercel.app/" style="color: #a77dff">ETH Bank</a> | <a href="https://www.miricanvas.com/v/13y5u71" style="color: #a77dff">Pitchdeck</a> | <a href="https://youtu.be/bXQ5CXDLTGA" style="color: #a77dff">Demo video</a>
 </p>
 
 <h1 align="center">ETH Bank (TradeFi & DeFi)</h1>
 
 <p align="center">
-  <a href="" style="color: #a77dff">High-Yield Contract</a> | <a href="" style="color: #a77dff">Funding & Lednig Contract</a> | <a href="" style="color: #a77dff">Loan Contract</a>
+  <a href="/contracts/StakingVault.sol" style="color: #a77dff">High-Yield Contract</a> | <a href="/contracts/LendingPool.sol" style="color: #a77dff">Lending Contract</a>
 </p>
 
 <p align="center">ETHBank seamlessly combines TradFi's trust with DeFi's innovation, offering a compliant and accessible <code>hybrid financial</code> ecosystem.</p>
@@ -57,20 +57,19 @@ Built on **`Ethena`**’s permissionless, high-yield infrastructure, ETHBank off
 
 ## Feature
 ### 1. High-Yield Savings Account
-**-> Here add on Diagram**
 - Users can stake USDe and earn rewards with competitive APYs, viewable on the Ethena platform.
 - Rewards can be configured to automatically repay loans, creating a repayable loan mechanism.
 - Offers a seamless savings experience with integrated loan management.
 
-### 2. Funding & Lending Model
-**-> Here add on Diagram**
+### 2. Lending Model
+  ![Alt text](/assets/lending.png "Lending")
+  
 - Users deposit funds into liquidity pools to fund projects, leveraging a tranche exposure structure:
   - **Senior Tranche:** Investors earn fixed returns (e.g., 11% annual return).
   - **Junior Tranche:** Receives the remaining yield after senior tranche payouts (e.g., if the project earns 40%, 11% goes to ST, and 29% goes to JT).
 - ETHBank acts as a Junior Tranche player, while depositors assume the role of Senior Tranche investors.
 
 ### 3. Overcollateralized Loan/Borrow
-**-> Here add on Diagram**
 - Users can stake ETH to borrow USDe with a fully transparent, overcollateralized structure.
 - Multiple repayment and collateralization options are available, offering flexibility for borrowers.
 - Innovative models for better risk and reward management are under exploration.

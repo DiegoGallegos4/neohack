@@ -1,10 +1,9 @@
-'use client';
+"use client";
 
 import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
 import React from "react";
 
 import { FilterSort } from "../../components/FilterSort";
-import { Hero } from "../../components/Hero";
 import { PropertyGrid } from "../../components/PropertyGrid";
 import { StatsCard } from "../../components/StatsCard";
 import Banner from "@/components/savings/Banner";

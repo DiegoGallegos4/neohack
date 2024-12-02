@@ -1,6 +1,5 @@
-'use client';
+"use client";
 
-import { ethers, parseEther } from "ethers";
 import {
   ArrowLeft,
   Calendar,
@@ -13,27 +12,29 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
-import { getContract, prepareContractCall, readContract } from "thirdweb";
-import { sepolia } from "thirdweb/chains";
-import { useActiveAccount, useSendAndConfirmTransaction } from "thirdweb/react";
 
-import { client } from "@/app/client";
 import { InvestmentForm } from "@/components/InvestmentForm";
 import { ProgressBar } from "@/components/ProgressBar";
-import { mockProperties } from "@/components/funding/utils";
+import { formatCurrency, mockProperties } from "@/components/funding/utils";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { useRouter } from "next/router";
 
 const propertyDetails = mockProperties[0];
 
 export default function PropertyDetail({ params }: { params: { id: string } }) {
-  const activeAccount = useActiveAccount();
-
+  const router = useRouter();
+  const property = router.query.propertyData
+    ? JSON.parse(router.query.propertyData as string)
+    : null;
+  const propertyData = {
+    ...property,
+    investmentType: "Lending",
+  };
   return (
     <main className="min-h-screen bg-gray-100 py-8">
       <div className="container mx-auto px-4">
@@ -47,8 +48,8 @@ export default function PropertyDetail({ params }: { params: { id: string } }) {
 
         <div className="bg-white rounded-lg shadow-md overflow-hidden">
           <Image
-            src={propertyDetails.image}
-            alt={propertyDetails.title}
+            src={propertyData.pool.image}
+            alt={propertyData.name}
             width={600}
             height={400}
             className="w-full h-64 object-cover"
@@ -58,7 +59,7 @@ export default function PropertyDetail({ params }: { params: { id: string } }) {
             <div className="grid md:grid-cols-2 gap-6 mb-6">
               <div>
                 <p className="text-sm text-gray-500 mb-2">
-                  {propertyDetails.investmentType}
+                  {propertyData.investmentType}
                 </p>
                 <h1 className="text-3xl font-bold mb-4">
                   {propertyDetails.title}
@@ -66,19 +67,19 @@ export default function PropertyDetail({ params }: { params: { id: string } }) {
                 <div className="flex items-center mb-2">
                   <TrendingUp className="h-5 w-5 text-green-500 mr-2" />
                   <span className="font-semibold">
-                    {propertyDetails.annualReturn}% Annual Return
+                    {propertyData.pool.lendingRate / 100}% IRR
                   </span>
                 </div>
                 <div className="flex items-center">
                   <Calendar className="h-5 w-5 text-blue-500 mr-2" />
-                  <span>{propertyDetails.term} Month Term</span>
+                  <span>{propertyData.pool.term} Month Term</span>
                 </div>
               </div>
               <div>
                 <ProgressBar
                   progress={
-                    (propertyDetails.currentInvestment /
-                      propertyDetails.target) *
+                    (propertyData.pool.availableAmount /
+                      propertyData.pool.targetAmount) *
                     100
                   }
                 />
@@ -87,13 +88,15 @@ export default function PropertyDetail({ params }: { params: { id: string } }) {
                     {propertyDetails.investors} investors
                   </span>
                   <span className="text-sm font-medium">
-                    ${propertyDetails.currentInvestment.toLocaleString()} of $
-                    {propertyDetails.target.toLocaleString()}
+                    {propertyData.pool.availableAmount} $
+                    {formatCurrency(
+                      Number(propertyData.pool.targetAmount) /
+                        10000000000000000,
+                    )}{" "}
                   </span>
                 </div>
                 <InvestmentForm
                   propertyName={propertyDetails.title}
-                  minInvestment={propertyDetails.minInvestment}
                   poolContract={params.id}
                 />
               </div>
@@ -104,13 +107,15 @@ export default function PropertyDetail({ params }: { params: { id: string } }) {
               <DetailItem
                 icon={<DollarSign className="h-5 w-5" />}
                 label="Investment Target"
-                value={`$${propertyDetails.target.toLocaleString()}`}
+                value={`$${formatCurrency(
+                  Number(propertyData.pool.targetAmount) / 10000000000000000,
+                )}`}
                 tooltip="The total amount of funding sought for this investment opportunity."
               />
               <DetailItem
                 icon={<TrendingUp className="h-5 w-5" />}
                 label="Expected Return"
-                value={`${propertyDetails.annualReturn}%`}
+                value={`${propertyData.pool.lendingRate / 100}%`}
                 tooltip="The projected annual return on investment."
               />
               <DetailItem
@@ -118,18 +123,6 @@ export default function PropertyDetail({ params }: { params: { id: string } }) {
                 label="Investment Term"
                 value={`${propertyDetails.term} months`}
                 tooltip="The duration of the investment period."
-              />
-              <DetailItem
-                icon={<Shield className="h-5 w-5" />}
-                label="Risk Category"
-                value={propertyDetails.riskCategory}
-                tooltip="The assessed level of risk associated with this investment."
-              />
-              <DetailItem
-                icon={<Home className="h-5 w-5" />}
-                label="LTV"
-                value={`${propertyDetails.ltv}%`}
-                tooltip="Loan-to-Value ratio: the ratio of the loan amount to the appraised value of the property."
               />
               <DetailItem
                 icon={<DollarSign className="h-5 w-5" />}
