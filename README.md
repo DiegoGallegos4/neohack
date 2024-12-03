@@ -10,6 +10,46 @@
 
 <p align="center">ETHBank seamlessly combines TradFi's trust with DeFi's innovation, offering a compliant and accessible <code>hybrid financial</code> ecosystem.</p>
 
+## Usage
+
+The monorepo contains directories for:
+- `contracts`: holds Solidity smart contracts
+- `frontend`: NextJS application under `neohack` and subgraph under `ethbank-sub`
+
+To build the contracts:
+```
+yarn compile
+```
+
+Deploy the contracts:
+```
+npx hardhat lz:deploy --network sepolia-testnet --tags <ContractName>
+```
+
+Run the web application:
+```
+cd frontend/neohack
+yarn dev
+```
+
+The application is built on Vercel once is deployed to the repository. The build can be debugged by running:
+```
+yarn build
+```
+
+### Ethena
+
+Staking/Unstaking on high yield savings account. Also used on staking when users deposit on lending pool. 
+
+**Staking**: The ERC4626 vault that is the interface for the high-yield savings account. Manages the user's rewards.
+
+**Lending**: the funding pool consists in a `Factory` and a `Pool` instance. When a new project the factory keeps track of its address and handles administrative tasks for it such as `staking` and `unstaking`. The pool manages all protocol parameters such as interest rate of return as well as the borrow rate for the institution. The `depositor` is the end-use which `deposits` fund into the protocol. The `bank` staked the liquidity pool during the capital raising fund. The institution is the KYB-ed actor that receives fund from the bank. The institution `repay`s the loan to the bank.
+
+### Goldsky
+
+Manages subgraph `/frontend/ethbank-sub`. [Graphql API](https://api.goldsky.com/api/public/project_cm3xynyhkldn001x32ywkffo0/subgraphs/ethbank-subgraph/1.0.0/gn)
+
+
 ## Overview
 <p align="center">
   <img src="https://github.com/user-attachments/assets/e5e0b564-cf49-4c96-89b3-bb9554ba1f54">
@@ -90,9 +130,3 @@ Built on **`Ethena`**’s permissionless, high-yield infrastructure, ETHBank off
 
 5. **DeFi Developers and Builders**  
    - Innovators exploring integrated blockchain financial solutions for creating new applications and services.  
-
-
-## Usage
-
-1. Ethena: Staking/Unstaking on high yield savings account. Also used on staking when users deposit on lending pool.
-2. Goldsky: Created subgraph `/frontend/ethbank-sub`. [Graphql API](https://api.goldsky.com/api/public/project_cm3xynyhkldn001x32ywkffo0/subgraphs/ethbank-subgraph/1.0.0/gn)
